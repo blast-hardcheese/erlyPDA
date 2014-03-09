@@ -51,13 +51,13 @@ transition(State, Push, Last, Stack) ->
         true -> {failure, State, Stack}
     end.
 
-rule(p0, 'e', 'z0', Stack) -> transition(p0, 'e', Stack);
-rule(p0, $0, 'z0', Stack) -> transition(p1, '0', 'z0', Stack);
+rule(p0, 'e', z0, Stack) -> transition(p0, 'e', Stack);
+rule(p0, $0, z0, Stack) -> transition(p1, '0', z0, Stack);
 rule(p0, $0, '0', Stack)  -> transition(p1, '0', '0', Stack);
 rule(p1, $0, '0', Stack)  -> transition(p2, '0', '0', Stack);
 rule(p2, $0, '0', Stack)  -> transition(p3, '0', '0', Stack);
 rule(p3, $0, '0', Stack)  -> transition(p0, '0', Stack);
 rule(p0, $1, '0', Stack)  -> transition(p4, 'e', Stack);
 rule(p4, $1, '0', Stack)  -> transition(p4, 'e', Stack);
-rule(p4, 'e', 'z0', Stack) -> transition(p4, 'e', Stack);
+rule(p4, 'e', z0, Stack) -> transition(p4, 'e', Stack);
 rule(State, _, _, Stack) -> {failure, State, Stack}.
