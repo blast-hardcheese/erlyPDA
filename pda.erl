@@ -18,7 +18,7 @@ parse(_, _, []) ->
 
 parse([], State, Stack) ->
     Top = hd(Stack),
-    case rule(State, 'e', Top, Stack) of
+    case rule(State, e, Top, Stack) of
         {ok, _, []} -> ok;
         _ -> failure
     end;
@@ -37,7 +37,7 @@ parse(Input, State, Stack) ->
         {failure, _, _} -> failure
     end.
 
-transition(NextState, 'e', Stack) ->
+transition(NextState, e, Stack) ->
     {ok, NextState, tl(Stack)};
 
 transition(NextState, Top, Stack) ->
@@ -51,13 +51,13 @@ transition(State, Push, Last, Stack) ->
         true -> {failure, State, Stack}
     end.
 
-rule(p0, 'e', z0, Stack)  -> transition(p0, 'e', Stack);
+rule(p0, e, z0, Stack)    -> transition(p0, e, Stack);
 rule(p0, "0", z0, Stack)  -> transition(p1, "0", z0, Stack);
 rule(p0, "0", "0", Stack) -> transition(p1, "0", "0", Stack);
 rule(p1, "0", "0", Stack) -> transition(p2, "0", "0", Stack);
 rule(p2, "0", "0", Stack) -> transition(p3, "0", "0", Stack);
 rule(p3, "0", "0", Stack) -> transition(p0, "0", Stack);
-rule(p0, "1", "0", Stack) -> transition(p4, 'e', Stack);
-rule(p4, "1", "0", Stack) -> transition(p4, 'e', Stack);
-rule(p4, 'e', z0, Stack)  -> transition(p4, 'e', Stack);
+rule(p0, "1", "0", Stack) -> transition(p4, e, Stack);
+rule(p4, "1", "0", Stack) -> transition(p4, e, Stack);
+rule(p4, e, z0, Stack)    -> transition(p4, e, Stack);
 rule(State, _, _, Stack)  -> {failure, State, Stack}.
