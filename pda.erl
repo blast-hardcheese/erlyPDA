@@ -1,7 +1,7 @@
 #!/usr/bin/env escript
 
 main([]) ->
-    io:format("Rule: ~p~n", [rule(p0, '0', 'z0', ['z0'])]),
+    io:format("Parse: ~p~n", [parse("0000111", p0, ['z0'])]),
     test("0000111"),
     test("00111"),
     test("00000000111111"),
@@ -10,7 +10,24 @@ main([]) ->
 test(_Input) ->
     failure.
 
-transition(_, _, _) -> failure.
+buildAtom(Input) -> list_to_atom([Input]).
+
+parse(Input, State, Stack) ->
+    Head = buildAtom(hd(Input)),
+    Top = hd(Stack),
+    Rest = tl(Input),
+
+    io:format("rule(~p ~p ~p ~p) -> ", [State, Head, Top, Stack]),
+    Res = rule(State, Head, Top, Stack),
+    io:format("~p~n", [Res]),
+    case Res of
+        {ok, _, []} -> ok;
+        {ok, NextState, NextStack} -> parse(Rest, NextState, NextStack);
+        {failure, _, _} -> failure
+    end.
+
+transition(State, _, Stack) -> {failure, State, Stack}.
+
 transition(State, Push, Last, Stack) ->
     Top = hd(Stack),
     if
