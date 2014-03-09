@@ -1,16 +1,28 @@
 #!/usr/bin/env escript
 
 main([]) ->
-    io:format("Parse: ~p~n", [parse("0000111", p0, ['z0'])]),
     test("0000111"),
     test("00111"),
     test("00000000111111"),
     test("").
 
-test(_Input) ->
-    failure.
+test(Input) ->
+    case parse(Input, p0, [z0]) of
+        ok -> io:format("~p conforms to the language!~n", [Input]);
+        failure -> io:format("~p does not conform to the language.~n", [Input])
+    end.
 
 buildAtom(Input) -> list_to_atom([Input]).
+
+parse(_, _, []) ->
+    failure;
+
+parse([], State, Stack) ->
+    Top = hd(Stack),
+    case rule(State, 'e', Top, Stack) of
+        {ok, _, []} -> ok;
+        _ -> failure
+    end;
 
 parse(Input, State, Stack) ->
     Head = buildAtom(hd(Input)),
@@ -48,4 +60,5 @@ rule(p2, '0', '0', Stack)  -> transition(p3, '0', '0', Stack);
 rule(p3, '0', '0', Stack)  -> transition(p0, '0', Stack);
 rule(p0, '1', '0', Stack)  -> transition(p4, 'e', Stack);
 rule(p4, '1', '0', Stack)  -> transition(p4, 'e', Stack);
-rule(p4, 'e', 'z0', Stack) -> transition(p4, 'e', Stack).
+rule(p4, 'e', 'z0', Stack) -> transition(p4, 'e', Stack);
+rule(State, _, _, Stack) -> {failure, State, Stack}.
