@@ -26,7 +26,12 @@ parse(Input, State, Stack) ->
         {failure, _, _} -> failure
     end.
 
-transition(State, _, Stack) -> {failure, State, Stack}.
+transition(NextState, 'e', Stack) ->
+    {ok, NextState, tl(Stack)};
+
+transition(NextState, Top, Stack) ->
+    Top = hd(Stack),
+    {ok, NextState, Stack}.
 
 transition(State, Push, Last, Stack) ->
     Top = hd(Stack),
