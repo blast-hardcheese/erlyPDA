@@ -11,7 +11,12 @@ test(_Input) ->
     failure.
 
 transition(_, _, _) -> failure.
-transition(_, _, _, _) -> failure.
+transition(State, Push, Last, Stack) ->
+    Top = hd(Stack),
+    if
+        Last == Top -> {ok, State, [Push | Stack]};
+        true -> {failure, State, Stack}
+    end.
 
 rule(p0, 'e', 'z0', Stack) -> transition(p0, 'e', Stack);
 rule(p0, '0', 'z0', Stack) -> transition(p1, '0', 'z0', Stack);
