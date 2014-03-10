@@ -14,7 +14,10 @@ find_match({State, Next, Top}) ->
 
 %match({State, Next, Top}) ->
 match(Current) ->
-    lists:foldl(find_match(Current), {failure, Current}, build_rules("rules.txt")).
+    match(Current, build_rules("rules.txt")).
+
+match(Current, Rules) ->
+    lists:foldl(find_match(Current), {failure, Current}, Rules).
 
 % {Current, Transition}
 build_rules(_Path) ->
