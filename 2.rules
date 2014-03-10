@@ -1,0 +1,7 @@
+{{p0, "2", z0}, {transition, p1, z0}}.
+{{p1, "0", z0}, {transition, p1, "0", "0"}}.
+{{p1, "0", "0"}, {transition, p1, "0", "0"}}.
+{{p1, "1", "0"}, {transition, p3, "0"}}.
+{{p2, "1", "0"}, {transition, p3, "0"}}.
+{{p3, "1", "0"}, {transition, p2, e}}.
+{{p2, e, z0}, {transition, p2, e}}.
