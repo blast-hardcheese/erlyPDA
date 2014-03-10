@@ -8,32 +8,33 @@ main([]) ->
     test("").
 
 test(Input) ->
-    case parse(Input, p0, [z0]) of
+    Rules = rules:build_rules("rules.txt"),
+    case parse(Input, p0, [z0], Rules) of
         ok -> io:format("~p conforms to the language!~n", [Input]);
         failure -> io:format("~p does not conform to the language.~n", [Input])
     end.
 
-parse(_, _, []) ->
+parse(_Input, _State, [], _Rules) ->
     failure;
 
-parse([], State, Stack) ->
+parse([], State, Stack, Rules) ->
     Top = hd(Stack),
-    case rule(State, e, Top, Stack) of
+    case rule(State, e, Top, Stack, Rules) of
         {ok, _, []} -> ok;
         _ -> failure
     end;
 
-parse(Input, State, Stack) ->
+parse(Input, State, Stack, Rules) ->
     Head = [hd(Input)],
     Top = hd(Stack),
     Rest = tl(Input),
 
     io:format("rule(~p ~p ~p ~p) -> ", [State, Head, Top, Stack]),
-    Res = rule(State, Head, Top, Stack),
+    Res = rule(State, Head, Top, Stack, Rules),
     io:format("~p~n", [Res]),
     case Res of
         {ok, _, []} -> ok;
-        {ok, NextState, NextStack} -> parse(Rest, NextState, NextStack);
+        {ok, NextState, NextStack} -> parse(Rest, NextState, NextStack, Rules);
         {failure, _, _} -> failure
     end.
 
@@ -49,5 +50,5 @@ applyNext({transition, NextState, _Preserve}, Stack) ->
 applyNext({transition, NextState, Push, _Existing}, Stack) ->
     {ok, NextState, [Push | Stack]}.
 
-rule(State, Head, Top, Stack) ->
-    applyNext(rules:match({State, Head, Top}), Stack).
+rule(State, Head, Top, Stack, Rules) ->
+    applyNext(rules:match({State, Head, Top}, Rules), Stack).

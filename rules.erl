@@ -1,7 +1,7 @@
 -module(rules).
 -export([
          build_rules/1,
-         match/1
+         match/2
         ]).
 
 find_match({State, Next, Top}) ->
@@ -11,10 +11,6 @@ find_match({State, Next, Top}) ->
             true -> Acc
         end
     end.
-
-%match({State, Next, Top}) ->
-match(Current) ->
-    match(Current, build_rules("rules.txt")).
 
 match(Current, Rules) ->
     lists:foldl(find_match(Current), {failure, Current}, Rules).
