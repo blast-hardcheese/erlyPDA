@@ -11,7 +11,7 @@ main([]) ->
     test("").
 
 test(Input) ->
-    test(Input, "rules.txt").
+    test(Input, "1.rules").
 
 test(Input, RulesPath) ->
     Rules = rules:build_rules(RulesPath),
