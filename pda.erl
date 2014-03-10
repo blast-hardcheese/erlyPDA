@@ -1,5 +1,8 @@
 #!/usr/bin/env escript
 
+main([Input, RulesPath]) ->
+    test(Input, RulesPath);
+
 main([]) ->
     test("0000111"),
     test("00111"),
@@ -8,7 +11,10 @@ main([]) ->
     test("").
 
 test(Input) ->
-    Rules = rules:build_rules("rules.txt"),
+    test(Input, "rules.txt").
+
+test(Input, RulesPath) ->
+    Rules = rules:build_rules(RulesPath),
     case parse(Input, p0, [z0], Rules) of
         ok -> io:format("~p conforms to the language!~n", [Input]);
         failure -> io:format("~p does not conform to the language.~n", [Input])
